@@ -43,10 +43,6 @@ Ordinarily, the Bellman equation only considers the expected return of a policy.
 
 Distributional RL seeks to rectify this problem by considering the value distribution $Z$.\cite{bellemare2017distributional}
 
-\section{Hindsight Experience Replay}
-
-HER is employed on top of deep RL algorithms such as DQN orr DDPG. HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
-
 \section{Asynchronous Deep Reinforcement Learning}
 
 Goals: require less specialized hardware, better performance than DQN/other deep RL
@@ -55,7 +51,13 @@ Multiple learners run in parallel, on different states using different policies.
 
 \cite{mnih2016asynchronous} presents 4 algorithms adapted to asynchronous framework
 
-\section{}
+\section{Hindsight Experience Replay}
+
+HER is employed on top of deep RL algorithms such as DQN orr DDPG. HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
+
+\section{Hierarchical Actor-Critic}
+
+\cite{levy2017hierarchical} introduces a new technique for hierarchical reinforcement learning. Tasks are divided into subgoals.
 
 \section{Conclusion}
 
