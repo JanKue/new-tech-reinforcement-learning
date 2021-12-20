@@ -12,8 +12,8 @@
 % to display URLs in blue roman font according to Springer's eBook style:
 % \renewcommand\UrlFont{\color{blue}\rmfamily}
 
-%\usepackage[style=splncs04]{biblatex}
-%\addbibresource{../papers/papers}
+%\usepackage{bibtex}
+%\addbibresource{papers.bib}
 
 \begin{document}
 %
@@ -45,11 +45,11 @@ Abstract
 
 Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. Information is lost.
 
-Distributional RL seeks to rectify this problem by considering the value distribution $Z$.
+Distributional RL seeks to rectify this problem by considering the value distribution $Z$.\cite{bellemare2017distributional}
 
 \section{Hindsight Experience Replay}
 
-HER allows learning multi-goal tasks from sparse and binary rewards.
+HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
 
 %
 % ---- Bibliography ----
@@ -61,7 +61,8 @@ HER allows learning multi-goal tasks from sparse and binary rewards.
 % \bibliography{mybibliography}
 %
 %\begin{thebibliography}{8}
-%\bibliographystyle{splncs04}
+\bibliographystyle{splncs04}
+\bibliography{papers}
 %\printbibliography
 %\end{thebibliography}
 
