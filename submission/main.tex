@@ -23,7 +23,7 @@
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{}
+\institute{KIT}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -35,15 +35,19 @@ Abstract
 %
 \section{Introduction}
 
-an overview of different novel technology in the field of reinforcement learning
+Reinforcement learning (RL), as an approach to machine learning, has been studied for decades. Especially the sub-field of deep reinforcement learning has attracted much attention during the last ten years, following the introduction of deep Q-learning \cite{mnih2013playing}, but new developments are not limited to this. This literature review provides an overview of several different novel technologies in the field of RL.
 
-\section{Distributional Reinforcement Learning}
+\section{Fundamentals of Reinforcement Learning}
+
+\section{Domains}
+
+\subsection{Distributional Reinforcement Learning}
 
 Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. Information is lost.
 
 Distributional RL seeks to rectify this problem by considering the value distribution $Z$.\cite{bellemare2017distributional}
 
-\section{Asynchronous Deep Reinforcement Learning}
+\subsection{Asynchronous Deep Reinforcement Learning}
 
 Goals: require less specialized hardware, better performance than DQN/other deep RL
 
@@ -51,13 +55,17 @@ Multiple learners run in parallel, on different states using different policies.
 
 \cite{mnih2016asynchronous} presents 4 algorithms adapted to asynchronous framework
 
-\section{Hindsight Experience Replay}
+\subsection{Hindsight Experience Replay}
 
-HER is employed on top of deep RL algorithms such as DQN orr DDPG. HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
+HER is employed on top of deep RL algorithms such as DQN or DDPG. HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
 
-\section{Hierarchical Actor-Critic}
+\subsection{Hierarchical Actor-Critic}
 
 \cite{levy2017hierarchical} introduces a new technique for hierarchical reinforcement learning. Tasks are divided into subgoals.
+
+\subsection{Feudal Networks}
+
+\cite{vezhnevets2017feudal}
 
 \section{Conclusion}
 
