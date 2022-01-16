@@ -30,20 +30,24 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Abstract
+This literature review provides an overview of several different novel technologies in the field of reinforcement learning. % placeholder text
 \end{abstract}
 %
 %
 %
 \section{Introduction}
 
-Reinforcement learning (RL), as an approach to machine learning, has been studied for decades. Especially the sub-field of deep reinforcement learning has attracted much attention during the last ten years, following the introduction of deep Q-learning \cite{mnih2013playing}, but new developments are not limited to this. This literature review provides an overview of several different novel technologies in the field of RL.
+Reinforcement learning (RL), as an approach to machine learning, has been studied for decades. Especially the sub-field of deep reinforcement learning has attracted much attention during the last ten years, following the introduction of deep Q-learning, but new developments are not limited to this. This literature review provides an overview of several different novel technologies in the field of RL.
 
 \section{Fundamentals of Reinforcement Learning}
 
-The standard framework of reinforcement learning is made up of an environment and an agent following a Markov decision process. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action. \cite{sutton2018reinforcement}
+The standard framework of reinforcement learning \cite{sutton2018reinforcement} is made up of an environment and an agent following a Markov decision process. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action.
+
+Q-learning; on-policy vs off-policy
 
 \subsection{Deep Reinforcement Learning}
+
+Deep Q-Networks (DQN) \cite{mnih2013playing}; experience replay
 
 \section{Domains}
 
@@ -51,11 +55,13 @@ The standard framework of reinforcement learning is made up of an environment an
 
 Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. Information is lost.
 
-Distributional RL seeks to rectify this problem by considering the value distribution $Z$.\cite{bellemare2017distributional}
+Distributional RL \cite{bellemare2017distributional} seeks to rectify this problem by considering the value distribution $Z$.
 
 \subsection{Asynchronous Deep Reinforcement Learning}
 
-Goals: require less specialized hardware, better performance than Deep Q-Networks (DQN)/other deep RL
+Current deep RL 
+
+require less specialized hardware, better performance than DQN/other deep RL
 
 Multiple learners run in parallel, on different states using different policies.
 
@@ -63,17 +69,21 @@ Multiple learners run in parallel, on different states using different policies.
 
 \subsection{Hindsight Experience Replay}
 
-Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome. The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
+Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome, which requires much expertise both in the specific task and in RL technology. The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
 
-Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards with a multi-goal framework. The technique is used on top of existing deep RL algorithms such as DQN or Deep Deterministic Policy Gradient (DDPG).
+Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards with a multi-goal framework. The technique is used on top of existing off-policy deep RL algorithms such as DQN or Deep Deterministic Policy Gradient (DDPG).
 
 \subsection{Hierarchical Actor-Critic}
 
-\cite{levy2017hierarchical} introduces a new technique for hierarchical reinforcement learning. Tasks are divided into subgoals.
+\cite{levy2017hierarchical} introduces a new technique for hierarchical reinforcement learning.
+
+The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach. The bottom layer takes atomic actions from the action space $\mathcal{A}$.
+
+DDPG and HER are utilized in this algorithm.
 
 \subsection{Feudal Networks}
 
-\cite{vezhnevets2017feudal}
+FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules.
 
 \section{Conclusion}
 
