@@ -8,6 +8,8 @@
 % to display URLs in blue roman font according to Springer's eBook style:
 \usepackage{hyperref}
 \renewcommand\UrlFont{\color{blue}\rmfamily}
+\usepackage{amsfonts}
+\usepackage{amsmath}
 
 \begin{document}
 %
@@ -39,6 +41,10 @@ Reinforcement learning (RL), as an approach to machine learning, has been studie
 
 \section{Fundamentals of Reinforcement Learning}
 
+The standard framework of reinforcement learning is made up of an environment and an agent following a Markov decision process. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action. \cite{sutton2018reinforcement}
+
+\subsection{Deep Reinforcement Learning}
+
 \section{Domains}
 
 \subsection{Distributional Reinforcement Learning}
@@ -49,7 +55,7 @@ Distributional RL seeks to rectify this problem by considering the value distrib
 
 \subsection{Asynchronous Deep Reinforcement Learning}
 
-Goals: require less specialized hardware, better performance than DQN/other deep RL
+Goals: require less specialized hardware, better performance than Deep Q-Networks (DQN)/other deep RL
 
 Multiple learners run in parallel, on different states using different policies.
 
@@ -57,7 +63,9 @@ Multiple learners run in parallel, on different states using different policies.
 
 \subsection{Hindsight Experience Replay}
 
-HER is employed on top of deep RL algorithms such as DQN or DDPG. HER allows learning multi-goal tasks from sparse and binary rewards.\cite{andrychowicz2017hindsight}
+Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome. The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
+
+Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards with a multi-goal framework. The technique is used on top of existing deep RL algorithms such as DQN or Deep Deterministic Policy Gradient (DDPG).
 
 \subsection{Hierarchical Actor-Critic}
 
