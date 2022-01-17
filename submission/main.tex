@@ -43,11 +43,11 @@ Reinforcement learning (RL), as an approach to machine learning, has been studie
 
 The standard framework of reinforcement learning \cite{sutton2018reinforcement} is made up of an environment and an agent following a Markov decision process. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action.
 
-Q-learning; on-policy vs off-policy
+Q-learning; on-policy vs off-policy; Bellman equation %% TODO
 
 \subsection{Deep Reinforcement Learning}
 
-Deep Q-Networks (DQN) \cite{mnih2013playing}; experience replay
+Deep Q-Networks (DQN) \cite{mnih2013playing}; experience replay; Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} %% TODO
 
 \section{Domains}
 
@@ -55,35 +55,43 @@ Deep Q-Networks (DQN) \cite{mnih2013playing}; experience replay
 
 Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. Information is lost.
 
-Distributional RL \cite{bellemare2017distributional} seeks to rectify this problem by considering the value distribution $Z$.
+Distributional RL \cite{bellemare2017distributional} seeks to rectify this problem by considering the value distribution $Z$, as defined by the distributional Bellman equation: $$Z(s,a) \overset{D}{=} R(s,a) + \gamma Z(s',a')$$
+
+In each state $s$, $Z(s,a)$ is influenced by three sources of randomness: The reward $R$, which is treated as a random variable in this model; the policy's transition probability distribution $P^\pi$, which is used to determine the next state $s'$; and the value distribution in $s'$, $Z(s',a')$.
 
 \subsection{Asynchronous Deep Reinforcement Learning}
 
-Current deep RL 
-
-require less specialized hardware, better performance than DQN/other deep RL
+While existing deep RL algorithms using experience replay are very powerful, the technique is computationally expensive. Asynchronous deep RL \cite{mnih2016asynchronous} promises to require less specialized hardware and achieve better performance than DQN or other deep RL algorithms.
 
 Multiple learners run in parallel, on different states using different policies.
+%% TODO
+This approach can be applied to both on-policy and off-policy algorithms.
 
-\cite{mnih2016asynchronous} presents 4 algorithms adapted to asynchronous framework
+Such asynchronous algorithms can run on a single multi-core CPU and achieve comparable or superior results to DQN trained on GPUs.
 
 \subsection{Hindsight Experience Replay}
 
 Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome, which requires much expertise both in the specific task and in RL technology. The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
 
-Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards with a multi-goal framework. The technique is used on top of existing off-policy deep RL algorithms such as DQN or Deep Deterministic Policy Gradient (DDPG).
+Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards in a multi-goal setting. The technique is used on top of existing off-policy deep RL algorithms such as DQN or DDPG.
 
-\subsection{Hierarchical Actor-Critic}
+In each episode, HER samples an initial state $s_0$ and a goal $g$ which it attempts to reach using the learning algorithm (e.g. DDPG). All its transitions and their associated rewards are stored in the experience replay buffer, as is standard. HER then samples a set of additional goals $g' \in G$ from among the states that were reached during the episode, and reevaluates each transition with respect to these new goals. These new results are also stored in the experience replay buffer.
 
-\cite{levy2017hierarchical} introduces a new technique for hierarchical reinforcement learning.
-
-The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach. The bottom layer takes atomic actions from the action space $\mathcal{A}$.
-
-DDPG and HER are utilized in this algorithm.
+By doing so, even if it failed to reach the original goal, the network has learned to reach a number of other states. This experience will improve its future performance.
 
 \subsection{Feudal Networks}
 
 FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules.
+
+\subsection{Hierarchical Actor-Critic}
+
+One of the drawbacks of many deep RL algorithms is that they are slow, a fact which is partially caused by the fact that they learn at the lowest level of abstraction. Because only one action is taken at a time, very long action sequences must be learned. Evaluating such long sequences is difficult, especially if the environment only provides sparse rewards. The lack of abstraction also limits the exploration of large state spaces.
+
+A hierarchical RL algorithm would solve such problems by working at a higher levels of abstraction, but traditional hierarchical methods are have limitations which make them impractical for many tasks. Feudal algorithms, for example, are limited to working on discrete action spaces.
+
+Hierarchical Actor-Critic (HAC) \cite{levy2017hierarchical} is a new technique for hierarchical RL which utilizes DDPG and HER.
+
+The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach. The bottom layer takes atomic actions from the action space $\mathcal{A}$.
 
 \section{Conclusion}
 
@@ -92,12 +100,6 @@ FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing f
 %
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
-%
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
-% \begin{thebibliography}{8}
-% \end{thebibliography}
 
 \bibliographystyle{splncs04}
 \bibliography{bibliography}
