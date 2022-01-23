@@ -10,6 +10,7 @@
 \renewcommand\UrlFont{\color{blue}\rmfamily}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{todonotes}
 
 \begin{document}
 %
@@ -30,70 +31,99 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-This literature review provides an overview of several different novel technologies in the field of reinforcement learning. % placeholder text
+Reinforcement learning is a discipline with a long history, which has received renewed interest in the past decade due to the development of powerful new algorithms based on deep neural networks.
+Yet this has also exposed that learning speed, reward engineering, and resource efficiency are aspects which must be improved so that the performance of reinforcement learning can be optimized.
+Different novel technologies have emerged which aim to tackle the challenges facing the field, including a distributional approach, an asynchronous parallel framework, a technique to improve experience replay, and two models for hierarchical reinforcement learning.
+This literature review provides an overview of these technologies and evaluates how suitable they are for advancing reinforcement learning research.
 \end{abstract}
 %
 %
 %
 \section{Introduction}
 
-Reinforcement learning (RL), as an approach to machine learning, has been studied for decades. Especially the sub-field of deep reinforcement learning has attracted much attention during the last ten years, following the introduction of deep Q-learning, but new developments are not limited to this. This literature review provides an overview of several different novel technologies in the field of RL.
+Reinforcement learning (RL), as an approach to machine learning, has been studied for many years. Deep reinforcement learning was introduced during the past decade and addresses some of the issues of traditional RL, but also poses new challenges to be solved.
+
+One of the significant obstacles to solving complex problems with reinforcement learning is the difficulty of designing a good reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome, which requires expertise both in the specific task and in RL technology \cite{andrychowicz2017hindsight}. To create the best possible reward function becomes especially hard, but also increasingly important, when RL agents are designed to act more autonomously and generally \cite{dewey2014reinforcement}.
+
+Related to this is the issue of sparse rewards. For example, a sparse reward function for a robot might provide a positive reward for reaching a goal, a negative reward for running into an obstacle, and a reward of zero in all other case \cite{smart2002effective}. Such a sparse reward is much easier to define than a complex dense reward function because it is simple and intuitively based on a real environment. Learning with a sparse reward function, however, is quite difficult. The agent gets very little information from the reward. Exploration of the state space is made much harder by the fact that most rewards will be zero \cite{smart2002effective}.
+
+While deep reinforcement learning has produced impressive results, its practical implementation is limited by its high memory and computation needs \cite{mnih2016asynchronous}. Training of Deep Q-Networks takes a long time and speeding it up may require complex hardware such as the distributed architecture of Gorila \cite{nair2015massively}.
+
+Another reason for the slow learning of many deep RL algorithms is that they learn only at the lowest level of abstraction. Because only one action is taken at a time, very long action sequences must be learned. Evaluating such long sequences is difficult, especially if the environment only provides sparse rewards. The lack of abstraction also limits the exploration of large state spaces \cite{levy2017hierarchical}. To operate at a  higher level of abstraction is the goal of hierarchical reinforcement learning \cite{barto2003recent}. Traditional hierarchical RL algorithms, however, would first need to be modified and adapted to apply them to deep RL.
+
+This literature review provides an overview of several different novel technologies in the field of RL and investigates how those new methods attempt to resolve the aforementioned issues.
 
 \section{Fundamentals of Reinforcement Learning}
 
-The standard framework of reinforcement learning \cite{sutton2018reinforcement} is made up of an environment and an agent following a Markov decision process. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action.
+The standard framework of reinforcement learning is made up of an environment and an agent following a Markov decision process \cite{sutton2018reinforcement}. The environment consists of the state space $\mathcal{S}$ and action space $\mathcal{A}$. Each state-action pair has an associated reward $R(s,a)$ and transition probabilities $P(s'|s,a)$. The Markov decision process also makes use of the discount factor $\gamma \in [0,1]$. In each state, the agent uses a policy $\pi$ to select its next action \cite{sutton2018reinforcement}.
 
-Q-learning; on-policy vs off-policy; Bellman equation %% TODO
+Different algorithms exist for determining the optimal policy in a given situation. Traditional examples include Q-learning (off-policy) and SARSA (on-policy) \cite{sutton2018reinforcement,watkins1992q}. These algorithms commonly use Bellman equations to assign a Q-value to state-action pairs, which are then used to determine the optimal action in each state \cite{sutton2018reinforcement}.
 
-\subsection{Deep Reinforcement Learning}
-
-Deep Q-Networks (DQN) \cite{mnih2013playing}; experience replay; Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous} %% TODO
+Deep reinforcement learning combines traditional reinforcement learning with deep learning, using RL methods to train neural networks. Established deep RL algorithms include Deep Q-Networks (DQN) \cite{mnih2013playing} and Deep Deterministic Policy Gradient (DDPG) \cite{lillicrap2015continuous}, which both make use of an experience replay buffer. This replay buffer is used to store transitions that are then used to train the network at a later time.
 
 \section{Domains}
 
+The following five domains represent different new approaches to solving the varied reinforcement learning challenges.
+
 \subsection{Distributional Reinforcement Learning}
 
-Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. Information is lost.
+Ordinarily, the Bellman equation only considers the expected return of a policy. Two policies with the same expected return are considered equivalent, even if the underlying probability distributions are different and can lead to different results. This, of course, means that information that could be useful for solving a problem is lost.
 
 Distributional RL \cite{bellemare2017distributional} seeks to rectify this problem by considering the value distribution $Z$, as defined by the distributional Bellman equation: $$Z(s,a) \overset{D}{=} R(s,a) + \gamma Z(s',a')$$
 
-In each state $s$, $Z(s,a)$ is influenced by three sources of randomness: The reward $R$, which is treated as a random variable in this model; the policy's transition probability distribution $P^\pi$, which is used to determine the next state $s'$; and the value distribution in $s'$, $Z(s',a')$.
+In each state $s$, $Z(s,a)$ is influenced by three sources of randomness: The reward $R$, which is treated as a random variable in this model; the policy's transition probability distribution $P^\pi$, which is used to determine the next state $s'$; and the value distribution in $s'$, $Z(s',a')$ \cite{bellemare2017distributional}.
+
+The authors evaluated their algorithm on Atari 2600 games and found that their implementation of distributional RL was capable of outperforming existing algorithms, including DQN, in multiple cases \cite{bellemare2017distributional}.
 
 \subsection{Asynchronous Deep Reinforcement Learning}
 
-While existing deep RL algorithms using experience replay are very powerful, the technique is computationally expensive. Asynchronous deep RL \cite{mnih2016asynchronous} promises to require less specialized hardware and achieve better performance than DQN or other deep RL algorithms.
+While existing deep RL algorithms using experience replay are very powerful, the technique is computationally expensive. Asynchronous deep RL promises to require less specialized hardware and achieve better performance than DQN or other deep RL algorithms \cite{mnih2016asynchronous}.
 
-Multiple learners run in parallel, on different states using different policies.
-%% TODO
-This approach can be applied to both on-policy and off-policy algorithms.
+Multiple learners run in parallel, on different states using different policies.\todo{add details}
 
-Such asynchronous algorithms can run on a single multi-core CPU and achieve comparable or superior results to DQN trained on GPUs.
+This approach can be applied to both on-policy and off-policy algorithms. This is a further advantage compared to methods based on experience replay, which are restricted to off-policy learning \cite{mnih2016asynchronous}.
+
+Four variations have been evaluated: Asynchronous one-step Q-learning, asynchronous n-step Q-learning, asynchronous one-step SARSA, and asynchronous advantage actor-critic (A3C) \cite{mnih2016asynchronous}. A3C in particular can run on a single multi-core CPU and achieve comparable or superior results to DQN trained on GPUs or Gorila \cite{mnih2016asynchronous}.
 
 \subsection{Hindsight Experience Replay}
 
-Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function. The reward must be engineered to reflect the particular problem and produce the best possible outcome, which requires much expertise both in the specific task and in RL technology. The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
+Ordinarily, solving complex problems with reinforcement learning requires a complicated reward function.  The challenges of producing such an optimized reward function could be avoided by using sparse and binary rewards, e.g. $-1$ for not reaching a goal and $0$ for reaching it.
 
-Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards in a multi-goal setting. The technique is used on top of existing off-policy deep RL algorithms such as DQN or DDPG.
+Hindsight Experience Replay (HER) \cite{andrychowicz2017hindsight} is an approach that allows learning from such sparse and binary rewards in a multi-goal setting. The technique is used on top of existing off-policy deep RL algorithms such as DQN or DDPG. As the name suggests, it makes use of and improves upon the experience replay mechanism of these algorithms.
 
 In each episode, HER samples an initial state $s_0$ and a goal $g$ which it attempts to reach using the learning algorithm (e.g. DDPG). All its transitions and their associated rewards are stored in the experience replay buffer, as is standard. HER then samples a set of additional goals $g' \in G$ from among the states that were reached during the episode, and reevaluates each transition with respect to these new goals. These new results are also stored in the experience replay buffer.
 
 By doing so, even if it failed to reach the original goal, the network has learned to reach a number of other states. This experience will improve its future performance.
 
+Experiments show that DDPG + HER is able to solve a number of problems that are beyond the capabilities of DDPG alone \cite{andrychowicz2017hindsight}.
+
 \subsection{Feudal Networks}
 
-FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules.
+FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules. \todo{}
 
 \subsection{Hierarchical Actor-Critic}
 
-One of the drawbacks of many deep RL algorithms is that they are slow, a fact which is partially caused by the fact that they learn at the lowest level of abstraction. Because only one action is taken at a time, very long action sequences must be learned. Evaluating such long sequences is difficult, especially if the environment only provides sparse rewards. The lack of abstraction also limits the exploration of large state spaces.
+Most previous hierarchical approaches, including FuNs, can only operate on discrete action spaces \cite{levy2017hierarchical}.
 
-A hierarchical RL algorithm would solve such problems by working at a higher levels of abstraction, but traditional hierarchical methods are have limitations which make them impractical for many tasks. Feudal algorithms, for example, are limited to working on discrete action spaces.
+For a hierarchical algorithm to be as efficient as possible, the work should be divided evenly between the different agents. Many previous methods unfortunately struggle to do so \cite{levy2017hierarchical}.
 
-Hierarchical Actor-Critic (HAC) \cite{levy2017hierarchical} is a new technique for hierarchical RL which utilizes DDPG and HER.
+Hierarchical Actor-Critic (HAC) is a new technique for hierarchical RL specifically aimed at improving these two aspects \cite{levy2017hierarchical}.
 
-The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach. The bottom layer takes atomic actions from the action space $\mathcal{A}$.
+Like FuNs, HAC divides tasks on a temporal scale between its multiple layers. Unlike FuNs, which operate with two levels, HAC is designed for a variable number of layers: There is always a bottom layer, which takes atomic actions from the action space $\mathcal{A}$. On top of this there can be any number of subgoal layers.
+
+The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach.
 
 \section{Conclusion}
+
+This review shows the wide variety of approaches that can be used when developing new reinforcement learning algorithms.
+
+The literature on distributional RL \todo{}
+
+One of the significant contributions of asynchronous deep RL is that it shows how effective policies can be trained much more efficiently and without requiring as much specialized hardware. Such improvements are valuable for solving increasingly complex problems with reinforcement learning and may in the future allow deep RL to be deployed on a larger number of devices, including mobile devices.
+
+Another benefit of asynchronous deep RL is that different RL algorithms can potentially be adapted to fit the asynchronous framework. Further research may investigate how the technology can be applied to other RL algorithms and how this would impact learning performance.
+
+HER appears to be especially promising due to the way it is used on top of different existing deep RL algorithms (e.g. DQN, DDPG), and the fact that it allows learning in situations that would be completely out of reach otherwise. HAC also shows that HER can easily be combined with a variety of other technologies to create more complex solutions.
 
 %
 % ---- Bibliography ----
