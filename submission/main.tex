@@ -21,12 +21,11 @@
 % an abbreviated paper title here
 %
 \author{Jan Küblbeck}
+\institute{KIT}
 %
 \authorrunning{J. Küblbeck}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
-%
-\institute{KIT}
 %
 \maketitle              % typeset the header of the contribution
 %
@@ -99,7 +98,9 @@ Experiments show that DDPG + HER is able to solve a number of problems that are 
 
 \subsection{Feudal Networks}
 
-FeUdal Networks (FuNs) \cite{vezhnevets2017feudal} combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules. \todo{}
+FeUdal Networks (FuNs) combine previously existing feudal RL methods \cite{dayan1993feudal} with modern deep RL. It is a hierarchical model composed of two levels, the Manager and the Worker, which are modeled as separate modules \cite{vezhnevets2017feudal}. \todo{add details}
+
+The model uses directional goals, meaning that the agent is rewarded for moving in the correct direction, rather than only for reaching a goal state.
 
 \subsection{Hierarchical Actor-Critic}
 
@@ -109,21 +110,27 @@ For a hierarchical algorithm to be as efficient as possible, the work should be 
 
 Hierarchical Actor-Critic (HAC) is a new technique for hierarchical RL specifically aimed at improving these two aspects \cite{levy2017hierarchical}.
 
-Like FuNs, HAC divides tasks on a temporal scale between its multiple layers. Unlike FuNs, which operate with two levels, HAC is designed for a variable number of layers: There is always a bottom layer, which takes atomic actions from the action space $\mathcal{A}$. On top of this there can be any number of subgoal layers.
+Like FuNs, HAC divides tasks on a temporal scale between its multiple layers. Unlike FuNs, which operate with two levels, HAC is designed for a variable number of layers: There is always a bottom layer, which takes atomic actions from the action space $\mathcal{A}$. On top of this there can be any number of subgoal layers. The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach.
 
-The subgoal layers select subgoals as their actions, which then become the next goal for the next lower layer to reach.
+Each layer completes a set number of transitions and then uses Hindsight Experience Replay to train the agent \cite{levy2017hierarchical}.
+
+Versions of the HAC algorithm with 1 and 2 subgoal layers were tested and compared to a baseline HER + DDPG ("0 subgoal layers") algorithm. The results show that the HAC algorithms outperformed the baseline in every case. The agent with 2 subgoal layers was superior to the 1 subgoal layer agent in most experiments, but the version with a single subgoal layer was able to reach better results in one trial. It can be concluded that hierarchical learning with HAC performs better than the baseline, but adding additional layers is not always worth it.
 
 \section{Conclusion}
 
 This review shows the wide variety of approaches that can be used when developing new reinforcement learning algorithms.
 
-The literature on distributional RL \todo{}
+The literature on distributional RL shows the value of looking beyond the traditional Bellman equations and using the entire value distribution to train agents.
 
 One of the significant contributions of asynchronous deep RL is that it shows how effective policies can be trained much more efficiently and without requiring as much specialized hardware. Such improvements are valuable for solving increasingly complex problems with reinforcement learning and may in the future allow deep RL to be deployed on a larger number of devices, including mobile devices.
 
 Another benefit of asynchronous deep RL is that different RL algorithms can potentially be adapted to fit the asynchronous framework. Further research may investigate how the technology can be applied to other RL algorithms and how this would impact learning performance.
 
 HER appears to be especially promising due to the way it is used on top of different existing deep RL algorithms (e.g. DQN, DDPG), and the fact that it allows learning in situations that would be completely out of reach otherwise. HAC also shows that HER can easily be combined with a variety of other technologies to create more complex solutions.
+
+Both of the hierarchical methods have similar goals, namely to divide the task between their layers on a temporal scale and to allow each layer to learn its own policy as effectively as possible. And while they both approach these goals using deep RL technology, their specific implementations are quite different.
+
+\todo[inline]{finish conclusion}
 
 %
 % ---- Bibliography ----
